@@ -74,7 +74,7 @@
   },
   "recovery_limit": "Restored backups missing a run ID can remain unknown after the Hermes admission reservation expires; no new run or payment is authorized. The 2026-11-07 six-case check is historical and was not fully re-certified on 2026-11-11.",
   "automated_checks": {
-    "python": 289,
+    "python": 290,
     "browser": 39,
     "official_plugin_checks": 16,
     "plugin_warnings": 0

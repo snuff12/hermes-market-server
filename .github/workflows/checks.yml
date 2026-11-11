@@ -21,10 +21,16 @@ jobs:
           HERMES_MARKET_PYTHON: python
       - run: .venv/bin/python scripts/check_english.py
       - run: .venv/bin/python -m pytest -q
-      - run: npx playwright install --with-deps chromium
-        working-directory: web
-      - name: Browser integration
+      - name: Select browser
         working-directory: web
         run: |
-          export CHROME_PATH="$(node -e 'console.log(require("@playwright/test").chromium.executablePath())')"
-          npm run test:e2e
+          if command -v google-chrome >/dev/null; then
+            market_chrome_path="$(command -v google-chrome)"
+          else
+            npx playwright install --with-deps chromium
+            market_chrome_path="$(node -e 'console.log(require("@playwright/test").chromium.executablePath())')"
+          fi
+          printf 'CHROME_PATH=%s\n' "$market_chrome_path" >> "$GITHUB_ENV"
+      - name: Browser integration
+        working-directory: web
+        run: npm run test:e2e

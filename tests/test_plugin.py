@@ -61,7 +61,7 @@ async def test_buyer_tool_uses_pinned_hermes_get_config_signature(tmp_path, monk
             pass
         def get_config(self, key, default=None):
             calls.append((key, default))
-            return 'http://127.0.0.1:8765' if key == 'buyer_origin' else default
+            return {'buyer_origin': 'http://127.0.0.1:8765', 'buyer_mode': 'simulation'}.get(key, default)
     class Client:
         def __init__(self, origin, path):
             assert origin == 'http://127.0.0.1:8765'
@@ -75,7 +75,26 @@ async def test_buyer_tool_uses_pinned_hermes_get_config_signature(tmp_path, monk
     register(Context(), data_dir=tmp_path)
     result = json.loads(await tools['service_inspect']['handler']({'slug': 'diff-review'}))
     assert result['result']['slug'] == 'diff-review'
-    assert calls == [('role', 'both'), ('buyer_origin', 'http://127.0.0.1:8765'), ('buyer_mode', 'simulation')]
+    assert calls == [('role', 'both'), ('buyer_origin', 'https://market-api.0xeddie.kim'), ('buyer_mode', 'testnet')]
+
+
+async def test_fresh_plugin_discovers_public_testnet_services_without_buyer_credentials(monkeypatch):
+    tools, calls = {}, []
+    class Context:
+        def get_config(self, key, default=None): return default
+        def register_tool(self, **kwargs): tools[kwargs['name']] = kwargs
+        def register_skill(self, *args): pass
+    class Directory:
+        def __init__(self, origin): calls.append(origin)
+        async def search(self, query, *, mode):
+            calls.append((query, mode))
+            return {'listings': [{'name': 'Public service', 'mode': mode}]}
+        async def close(self): pass
+    monkeypatch.setattr('hermes_market.discovery.DirectoryClient', Directory)
+    register(Context())
+    result = json.loads(await tools['service_search']['handler']({'query': 'review'}))
+    assert result['listings'][0]['mode'] == 'testnet'
+    assert calls == ['https://market.0xeddie.kim', ('review', 'testnet')]
 
 
 def test_plugin_redacts_nested_buyer_authorizations():

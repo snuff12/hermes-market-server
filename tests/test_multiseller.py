@@ -147,7 +147,7 @@ async def test_plugin_status_routes_by_original_purchase_after_default_seller_ch
         async def status(self, identity): return {'purchase_id': identity, 'status': 'settled'}
         async def close(self): pass
     class Context:
-        def get_config(self, key, default=None): return ORIGINS[0] if key == 'buyer_origin' else default
+        def get_config(self, key, default=None): return {'buyer_origin': ORIGINS[0], 'buyer_mode': 'simulation'}.get(key, default)
         def register_tool(self, **kwargs): tools[kwargs['name']] = kwargs
         def register_skill(self, *args): pass
     monkeypatch.setattr('hermes_market.plugin.Buyer', Client)

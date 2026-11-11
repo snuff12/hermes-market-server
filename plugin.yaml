@@ -27,7 +27,7 @@ config_schema:
     description: Private draft directory shared with the seller owner application.
   buyer_mode:
     type: str
-    default: simulation
+    default: testnet
     description: Buyer mode, simulation or testnet. Testnet requires browser wallet approval.
   buyer_state_dir:
     type: str
@@ -43,5 +43,5 @@ config_schema:
     description: Local browser wallet approval gateway.
   buyer_origin:
     type: str
-    default: "http://127.0.0.1:8765"
+    default: "https://market-api.0xeddie.kim"
     description: Exact seller origin. HTTPS is required for remote testnet sellers.

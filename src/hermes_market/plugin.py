@@ -34,8 +34,8 @@ def register(ctx, *, data_dir=None):
                 raise Problem("role_denied", "This Hermes instance is not configured as a buyer.", 403)
             if action in {"inspect", "quote"} and bool(args.get("slug")) == bool(args.get("listing_id")):
                 raise Problem("invalid_service_target", "Select one listing_id or one configured-seller slug.", 422)
-            origin = ctx.get_config("buyer_origin", default="http://127.0.0.1:8765")
-            mode = ctx.get_config("buyer_mode", default="simulation")
+            origin = ctx.get_config("buyer_origin", default="https://market-api.0xeddie.kim")
+            mode = ctx.get_config("buyer_mode", default="testnet")
             listing = None
             if action in {"purchase", "status"} and buyer_path().exists():
                 origin, stored_mode = purchase_route(buyer_path(), args["purchase_id"])
@@ -128,7 +128,7 @@ def register(ctx, *, data_dir=None):
         directory = None
         try:
             directory = DirectoryClient(ctx.get_config("directory_origin", default="https://market.0xeddie.kim"))
-            return json.dumps(await directory.search(args.get("query", ""), mode=ctx.get_config("buyer_mode", default="simulation")))
+            return json.dumps(await directory.search(args.get("query", ""), mode=ctx.get_config("buyer_mode", default="testnet")))
         except Exception:
             return json.dumps({"error": {"code": "directory_unavailable", "message": "The service directory is unavailable."}})
         finally:

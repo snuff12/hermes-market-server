@@ -40,8 +40,15 @@ readable. Existing purchases retain their original origin. A restored backup
 missing a run ID can remain unknown after its remote admission reservation expires;
 this never authorizes another run or payment.
 
-## Entrant handoff
+## Hackathon submission · 2026-11-12
 
-The entrant will publish the X post and submit the final hackathon form separately.
-Neither action has been performed. Catalog acceptance is also a separate state.
-No additional account details are required for the completed source preparation.
+The English demo was published from `@0xeddiekim` with the required `@NousResearch`
+mention: https://x.com/0xeddiekim/status/2120540588093366511.
+
+The official six-field form was submitted with that post and the catalog PR. Its
+confirmation page displayed **Submission Received**. User-confirmed contact details
+are retained only in the private receipt. See the [sanitized submission record](hackathon-submission-2026-11-12.json).
+
+The hackathon entry is submitted. Organizer judging and maintainer catalog
+acceptance remain separate pending states. Original GitHub repositories remain
+intact because the user deferred their deletion.

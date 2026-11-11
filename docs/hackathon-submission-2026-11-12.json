@@ -1,0 +1,16 @@
+{
+  "project": "Hermes Market",
+  "form": "https://form.typeform.com/to/FwJLvOln",
+  "confirmation": "Submission Received",
+  "confirmed_at_utc": "2026-11-11T15:40:59.226203+00:00",
+  "submission_date_kst": "2026-11-12",
+  "x_demo": "https://x.com/0xeddiekim/status/2120540588093366511",
+  "catalog_pr": "https://github.com/NousResearch/hermes-agent/pull/152641",
+  "plugin_repository": "https://github.com/snuff12/hermes-market",
+  "plugin_pin": "2a8588bba7df0b3482e52e17692be1a92a2abd0e",
+  "public_marketplace": "https://market.0xeddie.kim",
+  "video_duration_seconds": 72.5,
+  "catalog_acceptance": "Pending maintainer review",
+  "hackathon_result": "Pending organizer review",
+  "contact_details": "Stored only in the private submission receipt."
+}

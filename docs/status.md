@@ -1,4 +1,8 @@
-# Implementation status · 2026-11-11
+# Implementation status · 2026-11-12
+
+The hackathon form displayed **Submission Received** on 2026-11-12 KST. The required
+[X demo](https://x.com/0xeddiekim/status/2120540588093366511) is published.
+Organizer judging and catalog acceptance remain pending.
 
 Public source publication is complete. [The plugin](https://github.com/snuff12/hermes-market)
 and [server source](https://github.com/snuff12/hermes-market-server) have public CI,

@@ -2,7 +2,7 @@
 
 [Install the Hermes plugin](https://github.com/snuff12/hermes-market) · [Run the local server](docs/quickstart.md)
 
-[Live marketplace](https://market.0xeddie.kim) · [Catalog submission PR](https://github.com/NousResearch/hermes-agent/pull/152641)
+[Live marketplace](https://market.0xeddie.kim) · [72.5-second demo](https://github.com/snuff12/hermes-market/releases/download/v0.1.0/hermes-market-demo.mp4) · [Catalog submission PR](https://github.com/NousResearch/hermes-agent/pull/152641)
 
 **Turn existing Hermes skills into paid APIs, with separate seller and buyer processes.** The default command runs a local simulation. A separate Base Sepolia path now connects wallet authentication, isolated Hermes execution, payment authorization, and chain reconciliation. All three local outcomes have now been exercised: a real Hermes draft and execution test, an automated browser purchase with a testnet receipt, and an independent Hermes buyer that used its purchased result. See [implementation status](docs/status.md) for the evidence and test-wallet boundary.
 

@@ -3,9 +3,9 @@
 Public source publication is complete. [The plugin](https://github.com/snuff12/hermes-market)
 and [server source](https://github.com/snuff12/hermes-market-server) have public CI,
 and [catalog PR #152641](https://github.com/NousResearch/hermes-agent/pull/152641)
-is open with a full SHA pin. An 84-second English working demo is available.
+is open with a full SHA pin. A 72.5-second English narrated working demo is available.
 Catalog acceptance and final hackathon form submission are separate states;
-see [submission status](submission-2026-11-10.md). The public directory is live at https://market.0xeddie.kim and the demo seller at https://market-api.0xeddie.kim through a dedicated Cloudflare Tunnel. Owner, buyer signing and runtime endpoints remain private. Both public services depend on this computer staying online. See [public verification](public-verification-2026-11-11.json).
+see [current submission status](submission-2026-11-11.md). The public directory is live at https://market.0xeddie.kim and the demo seller at https://market-api.0xeddie.kim through a dedicated Cloudflare Tunnel. Owner, buyer signing and runtime endpoints remain private. Both public services depend on this computer staying online. See [public verification](public-verification-2026-11-11.json).
 
 Current checkpoint: **all three local outcomes have completed with actual model and testnet evidence**. The default simulation remains available. Mainnet is disabled. The user resumed external hosting on 2026-11-11. Public HTTPS directory registration and a separate tunnel-facing seller are implemented; see [public hosting](public-hosting.md) for live deployment status.
 

@@ -1,0 +1,82 @@
+{
+  "checked_at": "2026-11-11T13:55:49.187042+00:00",
+  "deployment": "Named Cloudflare Tunnel to loopback services supervised by macOS LaunchAgents",
+  "host_dependency": "Directory and seller stop when this computer is off or disconnected.",
+  "checks": [
+    {
+      "url": "https://market.0xeddie.kim/health/ready",
+      "status": 200
+    },
+    {
+      "url": "https://market.0xeddie.kim/ui-config",
+      "status": 200
+    },
+    {
+      "url": "https://market.0xeddie.kim/admin/seller",
+      "status": 404
+    },
+    {
+      "url": "https://market.0xeddie.kim/runs",
+      "status": 404
+    },
+    {
+      "url": "https://market.0xeddie.kim/.git/config",
+      "status": 404
+    },
+    {
+      "url": "https://market-api.0xeddie.kim/health/ready",
+      "status": 200
+    },
+    {
+      "url": "https://market-api.0xeddie.kim/ui-config",
+      "status": 200
+    },
+    {
+      "url": "https://market-api.0xeddie.kim/admin/seller",
+      "status": 404
+    },
+    {
+      "url": "https://market-api.0xeddie.kim/runs",
+      "status": 404
+    },
+    {
+      "url": "https://market-api.0xeddie.kim/.git/config",
+      "status": 404
+    }
+  ],
+  "registered_services": [
+    {
+      "id": "88fbf9eab57b9b65922e714cddf201954fca0af28d723d4b654a97fed96b17a3",
+      "name": "Release Note Summary",
+      "origin": "https://market-api.0xeddie.kim",
+      "mode": "testnet",
+      "state": "online"
+    },
+    {
+      "id": "cb130bd73d27a7c84e3ae3af32bb8f4726c39c573dcf07cb59667817846d8b18",
+      "name": "Public Diff Review",
+      "origin": "https://market-api.0xeddie.kim",
+      "mode": "testnet",
+      "state": "online"
+    }
+  ],
+  "private_address_registration_rejected": true,
+  "unauthenticated_order_rejected": true,
+  "native_plugin_search": "Both listings returned through service_search against the public directory.",
+  "real_execution_tests": 2,
+  "new_payment_signatures": 0,
+  "new_payments": 0,
+  "existing_local_orders": {
+    "settled_results_preserved": 2,
+    "encrypted_authorizations_readable": true,
+    "original_runs_queryable": 2,
+    "origin_unchanged": true
+  },
+  "recovery_limit": "Restored backups missing a run ID can remain unknown after the Hermes admission reservation expires; no new run or payment is authorized. The 2026-11-07 six-case check is historical and was not fully re-certified on 2026-11-11.",
+  "automated_checks": {
+    "python": 289,
+    "browser": 39,
+    "official_plugin_checks": 16,
+    "plugin_warnings": 0
+  }
+}

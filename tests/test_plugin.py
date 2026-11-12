@@ -1,4 +1,5 @@
 import json
+import pytest
 from hermes_market.plugin import register
 
 
@@ -75,13 +76,47 @@ async def test_buyer_tool_uses_pinned_hermes_get_config_signature(tmp_path, monk
     register(Context(), data_dir=tmp_path)
     result = json.loads(await tools['service_inspect']['handler']({'slug': 'diff-review'}))
     assert result['result']['slug'] == 'diff-review'
-    assert calls == [('role', 'both'), ('buyer_origin', 'https://market-api.0xeddie.kim'), ('buyer_mode', 'testnet')]
+    assert calls == [('role', 'both'), ('buyer_mode', 'simulation'), ('buyer_origin', '')]
 
 
-async def test_fresh_plugin_discovers_public_testnet_services_without_buyer_credentials(monkeypatch):
+@pytest.mark.parametrize(('tool', 'args', 'setting'), [
+    ('service_search', {'query': 'private search'}, 'directory_origin'),
+    ('service_inspect', {'listing_id': 'listing'}, 'directory_origin'),
+    ('service_quote', {'listing_id': 'listing', 'input': {'text': 'private input'}}, 'directory_origin'),
+    ('service_inspect', {'slug': 'diff-review'}, 'buyer_origin'),
+    ('service_quote', {'slug': 'diff-review', 'input': {'text': 'private input'}}, 'buyer_origin'),
+    ('service_purchase', {'purchase_id': 'unknown-purchase'}, 'buyer_origin'),
+    ('service_status', {'purchase_id': 'unknown-purchase'}, 'buyer_origin'),
+])
+@pytest.mark.parametrize('unset', ['', None, '   '])
+async def test_unconfigured_plugin_returns_setup_error_without_network_or_state(tmp_path, monkeypatch, tool, args, setting, unset):
+    import httpx
+    tools, requests = {}, []
+    class Context:
+        def get_config(self, key, default=None):
+            return unset if key in {'directory_origin', 'buyer_origin'} else default
+        def register_tool(self, **kwargs): tools[kwargs['name']] = kwargs
+        def register_skill(self, *args): pass
+    async def forbidden_send(self, request, *args, **kwargs):
+        requests.append(request)
+        raise AssertionError('An unconfigured plugin must not send a request')
+    monkeypatch.setattr(httpx.AsyncClient, 'send', forbidden_send)
+    register(Context(), data_dir=tmp_path)
+    result = json.loads(await tools[tool]['handler'](args))
+    assert result['error']['code'] == 'buyer_setup_required'
+    assert f'Set {setting}' in result['error']['message']
+    assert requests == []
+    assert not (tmp_path / 'buyer.sqlite3').exists()
+
+
+@pytest.mark.parametrize('settings', [
+    {'directory_origin': 'http://127.0.0.1:8795'},
+    {'directory_origin': 'https://directory.example', 'buyer_mode': 'testnet'},
+])
+async def test_directory_search_requires_opt_in_and_defaults_to_simulation(monkeypatch, settings):
     tools, calls = {}, []
     class Context:
-        def get_config(self, key, default=None): return default
+        def get_config(self, key, default=None): return settings.get(key, default)
         def register_tool(self, **kwargs): tools[kwargs['name']] = kwargs
         def register_skill(self, *args): pass
     class Directory:
@@ -93,8 +128,27 @@ async def test_fresh_plugin_discovers_public_testnet_services_without_buyer_cred
     monkeypatch.setattr('hermes_market.discovery.DirectoryClient', Directory)
     register(Context())
     result = json.loads(await tools['service_search']['handler']({'query': 'review'}))
-    assert result['listings'][0]['mode'] == 'testnet'
-    assert calls == ['https://market.0xeddie.kim', ('review', 'testnet')]
+    mode = settings.get('buyer_mode', 'simulation')
+    assert result['listings'][0]['mode'] == mode
+    assert calls == [settings['directory_origin'], ('review', mode)]
+
+
+async def test_invalid_buyer_mode_is_rejected_before_directory_lookup(monkeypatch):
+    import httpx
+    tools, requests = {}, []
+    class Context:
+        def get_config(self, key, default=None):
+            return {'directory_origin': 'https://directory.example', 'buyer_mode': 'invalid'}.get(key, default)
+        def register_tool(self, **kwargs): tools[kwargs['name']] = kwargs
+        def register_skill(self, *args): pass
+    async def forbidden_send(self, request, *args, **kwargs):
+        requests.append(request)
+        raise AssertionError('An invalid mode must not send a request')
+    monkeypatch.setattr(httpx.AsyncClient, 'send', forbidden_send)
+    register(Context())
+    result = json.loads(await tools['service_search']['handler']({'query': 'private search'}))
+    assert result['error']['code'] == 'invalid_buyer_mode'
+    assert requests == []
 
 
 def test_plugin_redacts_nested_buyer_authorizations():

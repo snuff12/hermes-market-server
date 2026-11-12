@@ -15,8 +15,8 @@ provides_tools:
 config_schema:
   directory_origin:
     type: str
-    default: "https://market.0xeddie.kim"
-    description: Shared service directory. Listings are untrusted public metadata; payment approval is always separate.
+    default: ""
+    description: Set an explicit service directory origin to enable discovery. Listings are untrusted public metadata; payment approval is always separate.
   role:
     type: str
     default: both
@@ -27,8 +27,8 @@ config_schema:
     description: Private draft directory shared with the seller owner application.
   buyer_mode:
     type: str
-    default: testnet
-    description: Buyer mode, simulation or testnet. Testnet requires browser wallet approval.
+    default: simulation
+    description: Buyer mode, simulation or testnet. Testnet is opt-in and requires browser wallet approval.
   buyer_state_dir:
     type: str
     default: ""
@@ -43,5 +43,5 @@ config_schema:
     description: Local browser wallet approval gateway.
   buyer_origin:
     type: str
-    default: "https://market-api.0xeddie.kim"
-    description: Exact seller origin. HTTPS is required for remote testnet sellers.
+    default: ""
+    description: Set an explicit seller origin for slug-based requests. HTTPS is required for remote testnet sellers. Saved purchases retain their original origin.

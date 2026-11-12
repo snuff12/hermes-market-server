@@ -14,6 +14,12 @@
 
 Mainnet is disabled. The public marketplace and a demo seller use fixed HTTPS Cloudflare Tunnel addresses. They depend on the host computer staying online. Owner management and wallet approval remain private. See [public hosting](docs/public-hosting.md).
 
+The Hermes plugin defaults to `buyer_mode: simulation`, with empty
+`directory_origin` and `buyer_origin`. Configure your own local services or
+explicitly opt in to the [public demo settings](docs/public-hosting.md#install-and-buy).
+Unconfigured search and new seller requests return a setup error without network
+traffic. Existing purchases retain their saved seller origin.
+
 ## Shared service directory
 
 Users install **one Hermes Market plugin** from its GitHub repository while the official catalog PR is under review. The
@@ -108,7 +114,7 @@ npm --prefix web run test:e2e
 npm --prefix web audit
 ```
 
-The Python suite has 290 passing tests. The browser suite has 39 passing tests, including real deterministic EIP-191/EIP-712 signatures with mocked transport and chain outcomes. It sends no blockchain transaction. Cross-seller tests cover discovery, wallet isolation, approval binding, a shared budget, and original-seller recovery. Registration, review edits/retries, exact analytics and public sharing are also covered. Python x402 2.27.0 and browser x402 2.30.0 share a signed wire-format fixture. Browser dependencies currently have zero audit findings. Actual model and testnet results are recorded separately in the [sanitized integration evidence](docs/verification-2026-11-07.json). The [full review](docs/review-2026-11-07.md) adds read-only recovery checks against actual runs and chain receipts, plus a clean source-install check. The [analytics and review evidence](docs/marketplace-insights-verification-2026-11-07.json) records a live review of an existing testnet purchase without another payment.
+The Python suite has 316 passing tests. The browser suite has 39 passing tests, including real deterministic EIP-191/EIP-712 signatures with mocked transport and chain outcomes. It sends no blockchain transaction. Cross-seller tests cover discovery, wallet isolation, approval binding, a shared budget, and original-seller recovery. Registration, review edits/retries, exact analytics and public sharing are also covered. Python x402 2.27.0 and browser x402 2.30.0 share a signed wire-format fixture. Browser dependencies currently have zero audit findings. Actual model and testnet results are recorded separately in the [sanitized integration evidence](docs/verification-2026-11-07.json). The [full review](docs/review-2026-11-07.md) adds read-only recovery checks against actual runs and chain receipts, plus a clean source-install check. The [analytics and review evidence](docs/marketplace-insights-verification-2026-11-07.json) records a live review of an existing testnet purchase without another payment.
 
 ## Prepare the catalog plugin
 

@@ -6,6 +6,9 @@ description: Inspect and purchase an explicitly approved Hermes Market service.
 Check the configured buyer mode. Simulation returns fixed examples without real
 payments or model execution. Testnet uses Base Sepolia test USDC and a separate
 browser wallet approval gateway. Describe the actual mode accurately.
+The default is simulation with no directory or seller origin. If a tool returns
+a setup error, ask the user to configure the named setting. Do not select a
+public host or switch to testnet on the user's behalf.
 
 1. Use service_search to find a listing across sellers, or use an explicitly
    configured seller. Use service_inspect with the listing_id to read the live

@@ -4,6 +4,11 @@ The hackathon form displayed **Submission Received** on 2026-11-12 KST. The requ
 [X demo](https://x.com/0xeddiekim/status/2120540588093366511) is published.
 Organizer judging and catalog acceptance remain pending.
 
+The catalog reviewer requested explicit network opt-in and simulation defaults.
+The revised plugin leaves `directory_origin` and `buyer_origin` empty and returns
+setup errors before unconfigured requests. Existing purchases retain their saved
+seller origin. Public demo addresses require explicit configuration.
+
 Public source publication is complete. [The plugin](https://github.com/snuff12/hermes-market)
 and [server source](https://github.com/snuff12/hermes-market-server) have public CI,
 and [catalog PR #152641](https://github.com/NousResearch/hermes-agent/pull/152641)
@@ -56,7 +61,7 @@ source has been installed successfully in a fresh disposable Hermes home.
 - Browser tests cover the existing simulation flows plus wallet sign-in, exact payment signatures, explicit rejection, wrong-chain/domain/nonce rejection, wallet changes, same-payload retries, recovery, buyer approval, and Hermes draft import.
 - A deterministic expired EOA payment fixture produced with JavaScript x402 2.30.0 and viem 2.57.16 is shared with the Python x402 2.27.0 boundary checks.
 - Dependency audit reported zero findings for the web dependency set.
-- 290 Python tests passed, including DNS-pinned public discovery, public/private HTTP boundaries, stable ledger origins and tunnel configuration, covering wallet authentication, encrypted state, runtime policy, order races, buyer approval, restored backups, chain evidence, scoped directory publication, cross-seller approvals, source-only export, registration, analytics and purchase-backed reviews. `pip check` reported no broken requirements. The earlier PyPI check reported no active advisories for the 67 pinned Python packages; no dependencies were changed in this step.
+- 316 Python tests passed, including DNS-pinned public discovery, public/private HTTP boundaries, stable ledger origins and tunnel configuration, covering wallet authentication, encrypted state, runtime policy, order races, buyer approval, restored backups, chain evidence, scoped directory publication, cross-seller approvals, source-only export, registration, analytics and purchase-backed reviews. `pip check` reported no broken requirements. The earlier PyPI check reported no active advisories for the 67 pinned Python packages; no dependencies were changed in this step.
 - A temporary clean source checkout installed its dependencies, built the UI, exposed the CLI, and initialized private testnet configuration successfully on Python 3.14.6.
 
 The automated unit and browser suites use test doubles for external outcomes. The separate live integration checks below record actual model and chain evidence; they are not inferred from those fixtures.

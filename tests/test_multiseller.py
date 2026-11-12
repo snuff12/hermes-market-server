@@ -135,7 +135,9 @@ async def test_changed_listing_version_cannot_silently_create_a_quote(tmp_path, 
         await buyer.close()
 
 
-async def test_plugin_status_routes_by_original_purchase_after_default_seller_changes(tmp_path, monkeypatch):
+@pytest.mark.parametrize('selected_origin', [ORIGINS[0], ''])
+@pytest.mark.parametrize('action', ['status', 'purchase'])
+async def test_plugin_routes_by_original_purchase_after_seller_changes_or_removal(tmp_path, monkeypatch, selected_origin, action):
     tools = {}
     buyer = Buyer(ORIGINS[1], tmp_path / 'buyer.sqlite3')
     buyer.save({'purchase_id': 'saved-purchase', 'origin': ORIGINS[1], 'mode': 'simulation', 'status': 'submitted'})
@@ -145,12 +147,13 @@ async def test_plugin_status_routes_by_original_purchase_after_default_seller_ch
             assert origin == ORIGINS[1]
         async def connect(self): pass
         async def status(self, identity): return {'purchase_id': identity, 'status': 'settled'}
+        async def purchase(self, identity): return {'purchase_id': identity, 'status': 'settled'}
         async def close(self): pass
     class Context:
-        def get_config(self, key, default=None): return {'buyer_origin': ORIGINS[0], 'buyer_mode': 'simulation'}.get(key, default)
+        def get_config(self, key, default=None): return {'buyer_origin': selected_origin}.get(key, default)
         def register_tool(self, **kwargs): tools[kwargs['name']] = kwargs
         def register_skill(self, *args): pass
     monkeypatch.setattr('hermes_market.plugin.Buyer', Client)
     register(Context(), data_dir=tmp_path)
-    result = json.loads(await tools['service_status']['handler']({'purchase_id': 'saved-purchase'}))
+    result = json.loads(await tools['service_' + action]['handler']({'purchase_id': 'saved-purchase'}))
     assert result['result']['status'] == 'settled'

@@ -9,8 +9,8 @@ export default {
   register(ctx) {
     const destinations = [
       [
-        "Browse",
-        "Find services from different sellers.",
+        "Public demo",
+        "Open the author-operated testnet directory in your browser. This is optional.",
         "https://market.0xeddie.kim",
       ],
       [
@@ -71,7 +71,7 @@ export default {
         h(
           "p",
           { className: "text-(--ui-text-tertiary)" },
-          "Browse the public marketplace. To sell or use local purchase approval, start your owner workspace and buyer gateway. Base Sepolia uses test USDC.",
+          "Agent tools default to simulation and require explicitly configured origins. The public demo opens only when selected. To sell or approve purchases, start your local owner workspace and buyer gateway. Base Sepolia uses test USDC.",
         ),
       );
     }

@@ -61,6 +61,13 @@ The catalog entry pins the exact reviewed source commit.
 
 ## Public marketplace and local workspaces
 
+Fresh installations default to `buyer_mode: simulation`. Both `directory_origin`
+and `buyer_origin` are empty. Search and listing tools return a setup error until
+you set `directory_origin`; new slug-based requests require `buyer_origin`.
+No buyer or discovery request is sent before the required origin is configured.
+Saved purchases continue to use their original seller, even if these settings
+are cleared. Testnet purchases still require an explicit `buyer_mode: testnet`.
+
 The backend source and step-by-step setup are in
 [hermes-market-server](https://github.com/snuff12/hermes-market-server/blob/main/docs/quickstart.md).
 Start with its free simulation. Configure these settings in your active Hermes
@@ -84,14 +91,42 @@ quote. Payment approval is a separate human action. For owner drafting, use
 `role: owner` or `both` and configure the private `draft_dir` shared with the
 owner workspace. See the server guide for Base Sepolia setup and browser approval.
 
-The default directory is [market.0xeddie.kim](https://market.0xeddie.kim). Set
-`buyer_mode: testnet` and configure the separate local browser approval gateway to
-use public sellers. The public demo depends on its host computer staying online.
-For a free local simulation, use the explicit configuration above.
+### Optional public demo
+
+To opt in to the author-operated public demo, paste the following values into
+the plugin's `settings` and replace both private paths with your actual gateway
+paths:
+
+```yaml
+directory_origin: https://market.0xeddie.kim
+buyer_origin: https://market-api.0xeddie.kim
+buyer_mode: testnet
+buyer_state_dir: /absolute/path/to/hermes-market-server/.state/buyer-testnet
+buyer_vault_key_file: /absolute/path/to/hermes-market-server/.state/buyer-testnet/authorization.key
+buyer_approval_origin: http://127.0.0.1:8767
+```
+
+From the server checkout, start the separate local approval gateway with matching
+origins and paths. Replace the example paths consistently in both places:
+
+```sh
+.venv/bin/hermes-market buyer-gateway \\
+  --origin https://market-api.0xeddie.kim \\
+  --directory-origin https://market.0xeddie.kim \\
+  --buyer-state /absolute/path/to/hermes-market-server/.state/buyer-testnet \\
+  --vault-key-file /absolute/path/to/hermes-market-server/.state/buyer-testnet/authorization.key
+```
+
+This sends search queries to the demo directory. Inspecting or quoting a selected
+listing contacts its seller; quote input and the seller-scoped wallet session go
+to that seller. Review the seller origin before requesting a quote. These demo
+hosts are optional and depend on the author's computer staying online. Mainnet
+is disabled; this demo uses Base Sepolia test USDC.
 
 Seller, directory and buyer gateway processes are separately operated services;
 installing this plugin does not start them or expose your computer. The optional
-Desktop page opens the public Browse page and local My services and Purchases workspaces
+Desktop page opens the optional public demo only after you click its labeled button,
+and opens local My services and Purchases workspaces
 in your browser. It is a launcher, not an embedded wallet.
 
 ## Disclosure

@@ -27,6 +27,18 @@ def register(ctx, *, data_dir=None):
             return Path(configured_dir).expanduser() / "buyer.sqlite3"
         raise Problem("buyer_setup_required", "Configure the private buyer_state_dir before creating purchases or drafts.", 409)
 
+    def configured_origin(key):
+        origin = ctx.get_config(key, default="")
+        if not isinstance(origin, str) or not origin.strip():
+            raise Problem("buyer_setup_required", f"Set {key} in the Hermes Market plugin settings before using this tool.", 409)
+        return origin.strip()
+
+    def buyer_mode():
+        mode = ctx.get_config("buyer_mode", default="simulation")
+        if mode not in ("simulation", "testnet"):
+            raise Problem("invalid_buyer_mode", "The buyer mode must be simulation or testnet.", 422)
+        return mode
+
     async def invoke_buyer(action, args):
         buyer = None
         try:
@@ -34,8 +46,7 @@ def register(ctx, *, data_dir=None):
                 raise Problem("role_denied", "This Hermes instance is not configured as a buyer.", 403)
             if action in {"inspect", "quote"} and bool(args.get("slug")) == bool(args.get("listing_id")):
                 raise Problem("invalid_service_target", "Select one listing_id or one configured-seller slug.", 422)
-            origin = ctx.get_config("buyer_origin", default="https://market-api.0xeddie.kim")
-            mode = ctx.get_config("buyer_mode", default="testnet")
+            mode = buyer_mode()
             listing = None
             if action in {"purchase", "status"} and buyer_path().exists():
                 origin, stored_mode = purchase_route(buyer_path(), args["purchase_id"])
@@ -43,7 +54,7 @@ def register(ctx, *, data_dir=None):
                     raise Problem("buyer_mode_mismatch", "Select the buyer mode used for this original purchase.", 409)
             elif args.get("listing_id"):
                 from .discovery import DirectoryClient
-                directory = DirectoryClient(ctx.get_config("directory_origin", default="https://market.0xeddie.kim"))
+                directory = DirectoryClient(configured_origin("directory_origin"))
                 try:
                     listing = await directory.get(args["listing_id"])
                 finally:
@@ -54,6 +65,8 @@ def register(ctx, *, data_dir=None):
                     raise Problem("seller_unavailable", "This seller is not currently available. Refresh its listing.", 409)
                 origin = listing["origin"]
                 args = {**args, "slug": listing["service"]["slug"]}
+            else:
+                origin = configured_origin("buyer_origin")
             if mode == "testnet":
                 from .buyer import TestnetBuyer
                 from .vault import AuthorizationVault
@@ -64,8 +77,6 @@ def register(ctx, *, data_dir=None):
                     approval_origin=ctx.get_config("buyer_approval_origin", default="http://127.0.0.1:8767"))
             elif mode == "simulation":
                 buyer = Buyer(origin, buyer_path())
-            else:
-                raise Problem("invalid_buyer_mode", "The buyer mode must be simulation or testnet.", 422)
             await buyer.connect()
             if action == "inspect":
                 result = await buyer.inspect(args["slug"])
@@ -127,8 +138,11 @@ def register(ctx, *, data_dir=None):
             return json.dumps({"error": {"code": "role_denied", "message": "This Hermes instance is not a buyer."}})
         directory = None
         try:
-            directory = DirectoryClient(ctx.get_config("directory_origin", default="https://market.0xeddie.kim"))
-            return json.dumps(await directory.search(args.get("query", ""), mode=ctx.get_config("buyer_mode", default="testnet")))
+            mode = buyer_mode()
+            directory = DirectoryClient(configured_origin("directory_origin"))
+            return json.dumps(await directory.search(args.get("query", ""), mode=mode))
+        except Problem as exc:
+            return json.dumps({"error": {"code": exc.code, "message": exc.message}})
         except Exception:
             return json.dumps({"error": {"code": "directory_unavailable", "message": "The service directory is unavailable."}})
         finally:

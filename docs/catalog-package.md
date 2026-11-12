@@ -19,8 +19,15 @@ the host `ctx.llm` interface. No provider credential store is read by the candid
 - Six tools: search, draft, inspect, quote, purchase and status.
 - Listing-ID selection across seller origins, with exact live revision checks.
 - Original-origin purchase recovery, signer-free approval and a shared budget.
-- An optional Desktop SDK page and sidebar row with **Browse**, **My services**,
-  and **Purchases** launch buttons. They open the default local browser addresses.
+- An optional Desktop SDK page and sidebar row with **Public demo**, **My services**,
+  and **Purchases** launch buttons. The public demo opens only after an explicit
+  click; owner and purchase workspaces use local addresses.
+
+Fresh installations default to simulation with empty `directory_origin` and
+`buyer_origin`. Unconfigured discovery and new seller requests fail before
+network I/O. Demo addresses are documented as explicit opt-in settings in the
+exported README. Original purchase recovery retains its saved seller origin;
+testnet recovery requires the original buyer mode and private gateway state.
 
 Seller APIs, the directory and the wallet gateway are separately operated
 services. Installing the plugin does not start background servers, expose a
@@ -47,16 +54,17 @@ there were zero warnings. This is not maintainer admission.
 
 The source is now published at [snuff12/hermes-market](https://github.com/snuff12/hermes-market).
 [Catalog PR #152641](https://github.com/NousResearch/hermes-agent/pull/152641)
-pins `03f1acee3187c62505ac45e8d987193381b7fa2a` (0.1.0). Public plugin validation
-and server CI passed. Installation of the exact public commit with
-`hermes plugins install snuff12/hermes-market --ref 03f1acee3187c62505ac45e8d987193381b7fa2a --yes-deps --enable`
-also succeeded in a fresh disposable Hermes home.
+requested changes to the `2a8588bba7df0b3482e52e17692be1a92a2abd0e` pin on
+2026-11-12 KST: remove personal-host defaults and restore simulation as the
+default mode. Payment and approval paths were reviewed positively. The revised
+candidate uses the explicit configuration boundaries above. Maintainer acceptance
+remains pending; the PR records the current source pin and validation result.
 
-The [84-second English demo](https://github.com/snuff12/hermes-market/releases/tag/v0.1.0)
+The [72.5-second English demo](https://github.com/snuff12/hermes-market/releases/tag/v0.1.0)
 and its captions are public. This is a catalog application, not maintainer
 approval or automatic inclusion. X posting and the hackathon form are tracked
-separately in the [submission status](submission-2026-11-10.md). Public source
-publication does not expose the local servers; external hosting remains deferred.
+separately in the [submission status](submission-2026-11-11.md). The public demo
+uses a dedicated tunnel; plugin installation does not expose local services.
 
 ## References
 

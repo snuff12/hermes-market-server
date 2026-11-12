@@ -124,10 +124,42 @@ hermes plugins install snuff12/hermes-market
 hermes plugins enable hermes-market
 ```
 
-The plugin's default directory is `https://market.0xeddie.kim`. Set `buyer_mode` to
-`testnet` and configure a private buyer ledger and its local browser approval
-gateway. Wallet signing remains a separate human action. Existing purchases use
-their saved seller origin even after another listing is selected.
+The plugin defaults to `buyer_mode: simulation` with empty `directory_origin`
+and `buyer_origin`. Unconfigured discovery and new seller requests return a
+setup error without making a network request.
+
+To opt in to the author-operated public demo, paste these values into the
+Hermes Market plugin settings and replace the private paths with your gateway's
+actual paths:
+
+```yaml
+directory_origin: https://market.0xeddie.kim
+buyer_origin: https://market-api.0xeddie.kim
+buyer_mode: testnet
+buyer_state_dir: /absolute/path/to/hermes-market/.state/buyer-testnet
+buyer_vault_key_file: /absolute/path/to/hermes-market/.state/buyer-testnet/authorization.key
+buyer_approval_origin: http://127.0.0.1:8767
+```
+
+Start the separate local browser approval gateway with the same origins and
+private paths. Replace both example paths consistently with the settings above:
+
+```sh
+.venv/bin/hermes-market buyer-gateway \
+  --origin https://market-api.0xeddie.kim \
+  --directory-origin https://market.0xeddie.kim \
+  --buyer-state /absolute/path/to/hermes-market/.state/buyer-testnet \
+  --vault-key-file /absolute/path/to/hermes-market/.state/buyer-testnet/authorization.key
+```
+
+See the [testnet guide](local-testnet.md#buy-through-a-separate-hermes-agent)
+for the browser approval steps. Search queries go to the configured directory.
+Listing inspection and quote input go
+to the selected seller, together with any seller-scoped wallet session.
+Review the seller origin before requesting a quote. Wallet signing remains a
+separate human action. Existing purchases use their saved seller origin even
+after a different listing is selected or these origin settings are cleared.
+Testnet recovery still requires the original buyer mode, private ledger and vault.
 
 ## Rename compatibility
 
